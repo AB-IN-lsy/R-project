@@ -1,0 +1,250 @@
+---
+title: "STATS 201 Assignment 1"
+author: "刘思远 2019210173"
+date: 'Due Date: ----'
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.height=3)
+```
+```{r echo=FALSE}
+## Do not delete this!
+## It loads the s20x library for you. If you delete it 
+## your document may not compile
+require(s20x)
+```
+
+
+# Question 1
+
+
+# Question of interest/goal of the study
+
+We are interested in using a country's gross domestic product to predict the amount of electricity that they use.
+
+# Read in and inspect the data:
+```{r,fig.height=4,fig.width=6}
+elec.df<-read.csv("electricity.csv")
+plot(Electricity~GDP, data=elec.df)
+
+```
+
+WRITE COMMENT HERE
+
+# Fit an appropriate linear model, including model checks.
+```{r,fig.height=4,fig.width=6}
+elecfit1=lm(Electricity~GDP,data=elec.df)
+plot(elecfit1,which=1)
+normcheck(elecfit1)
+cooks20x(elecfit1)
+```
+
+# Identify the two countries with GDP greater than 6000. 
+```{r,fig.height=4,fig.width=6}
+# could use some R code to do this
+```
+
+WRITE COMMENT HERE
+
+
+# Replot data eliminating countries with GDP greater than 6000. 
+```{r,fig.height=4,fig.width=6}
+# Hint: If you want to limit the range of the data, do so in the data statement. E.G. something similar to data=elec.df[elec.df$GDP>2000,]
+
+
+```
+
+WRITE COMMENT HERE
+
+
+
+# Fit a more appropriate linear model, including model checks.
+```{r,fig.height=4,fig.width=6}
+
+
+
+
+```
+
+
+# Create a scatter plot with the fitted line from your model superimposed over it. 
+```{r,fig.height=4,fig.width=6}
+
+
+
+
+```
+
+
+# Method and Assumption Checks
+Since we have a linear relationship in the data, we have fitted a simple linear regression model to our data. We have 28 of the most populous countries, but have no information on how these were obtained. As the method of sampling is not detailed, there  could be doubts about independence. These are likely to be minor, with a bigger concern being how representative the data is of a wider group of countries. The initial residuals and Cooks plot showed two distinct outliers (USA and China) who had vastly higher GDP than all other countries and therefore could be following a totally different pattern so we limited our analysis to countries with GDP under 6000 (billion dollars). After this, the residuals show patternless scatter with fairly constant variability - so no problems. The normaility checks don't show any major problems (slightly long tails, if anything) and the Cook's plot doesn't reveal any further unduly influential points. Overall, all the model assumptions are satisfied. 
+
+Our model is:
+$Electricity_i =\beta_0 +\beta_1\times GDP_i +\epsilon_i$ where $\epsilon_i \sim iid ~ N(0,\sigma^2)$ 
+
+Our model explains 93% of the total variation in the response variable, and so will be reasonable for prediction.
+
+
+# Executive Summary
+
+WRITE EXEC SUMMARY HERE
+
+
+
+
+
+
+# Predict the electricity usage for a country with GDP 1000 billion dollars. 
+```{r}
+
+
+
+
+```
+
+# Interpret the prediction and comment on how useful it is.
+
+WRITE COMMENTS HERE
+
+
+
+****
+
+# Question 2
+
+# Question of interest/goal of the study
+We are interested in estimating the mean life expectancy of people in the world and seeing if the data is consistant with a mean value of 68 years.
+
+
+## Read in and inspect the data:
+```{r,fig.height=3.5}
+Life.df=read.csv("countries.csv",header=T)
+hist(Life.df$Life)
+summary(Life.df$Life)
+```
+
+WRITE COMMENT HERE
+
+
+## Manually calculate the t-statistic and the corresponding 95\% confidence interval. 
+Formula: $T = \frac{\bar{y}-\mu_0}{se(\bar{y})}$ and 95\% confidence interval $\bar{y} \pm t_{df,0.975} \times se(\bar{y})$
+
+NOTES: The R code ```mean(y)``` calculates $\bar{y}$, ```sd(y)``` calculates $s$, the standard deviation of $y$, and the degrees of freedom, $df = n-1$. The standard error, $se(\bar{y}) = \frac{s}{\sqrt{n}}$ and ```qt(0.975,df)``` gives the $t_{df,0.975}$ multiplier.   
+
+
+```{r}
+
+
+
+
+
+
+```
+
+##  Using the t.test function
+```{r}
+t.test(Life.df$Life, mu=68)
+```
+
+
+**Note:** 
+You should get exactly the same results from the manual calculations and using the $t.test$ function. Doing this was to give you practice using some R code.
+
+## Fit a null model 
+```{r}
+lifefit1=lm(Life~1,data=Life.df)
+normcheck(lifefit1)
+cooks20x(lifefit1)
+summary(lifefit1);
+confint(lifefit1)
+```
+
+# Why are the P-values from the t-test output and null linear model different?
+
+WRITE COMMENT HERE
+
+
+
+
+# Method and Assumption Checks
+
+As the data consists of one measurement - the life expectancy for each country - we have applied a one sample t-test to it, equivalent to an intercept only linear model (null model).
+
+We have a random sample of 55 countries so we can assume they form an independant and representative sample. We wished to estimate their average life expectancy and compare it to 68 years. Checking the normality of the differences reveals the data is moderately left skewed. However, we have a large sample size of 55 and can appeal to the Central Limit Theorem for the distribution of the sample mean, so are not concerned. There were no unduly influential points.
+
+Our model is:
+$Life_i = \mu_{Life} + \epsilon_i$ where $\epsilon_i \sim iid ~ N(0,\sigma^2)$ 
+
+# Executive Summary 
+
+
+WRITE EXEC SUMMARY HERE
+
+
+****
+
+# Question 3
+
+
+# Question of interest/goal of the study
+
+WRITE COMMENT HERE
+
+
+## Read in and inspect the data:
+```{r,fig.height=3.5,fig.width=6}
+home.df=read.csv("homes.csv",header=T)
+plot(Price~Age,data=home.df)
+trendscatter(Price~Age,data=home.df)
+```
+
+
+WRITE COMMENT HERE
+
+## Fit an appropriate linear model, including model checks.
+
+```{r,fig.height=3.5,fig.width=6}
+
+
+
+
+```
+
+## Plot the data with your appropriate model superimposed over it.
+```{r,fig.height=3.5,fig.width=6}
+
+
+
+```
+
+
+# Method and Assumption Checks
+
+WRITE M & A CHECKS HERE
+
+
+
+# Executive Summary
+
+
+WRITE EXEC SUMMARY HERE
+
+
+
+
+
+
+
+
+
+
+
+
+
+

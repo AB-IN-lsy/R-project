@@ -1,23 +1,20 @@
 ---
 title: "STATS 201 Assignment 1"
-author: "刘思远 2019210173"
-date: 'Due Date: ----'
+author: "Liu Siyuan 2019210173"
+date: 'Due Date: 10.10'
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
   html_document:
     fig_caption: yes
     number_sections: yes
 ---
 
-```{r global_options, include=FALSE}
-knitr::opts_chunk$set(fig.height=3)
-```
 ```{r echo=FALSE}
 ## Do not delete this!
 ## It loads the s20x library for you. If you delete it 
 ## your document may not compile
-require(s20x)
+library(s20x)
 ```
 
 
@@ -35,7 +32,8 @@ plot(Electricity~GDP, data=elec.df)
 
 ```
 
-WRITE COMMENT HERE
+
+It is observed from the figure that most of the points show a linear distribution, except two points whose GDP are greater than 5000.
 
 # Fit an appropriate linear model, including model checks.
 ```{r,fig.height=4,fig.width=6}
@@ -48,37 +46,35 @@ cooks20x(elecfit1)
 # Identify the two countries with GDP greater than 6000. 
 ```{r,fig.height=4,fig.width=6}
 # could use some R code to do this
+elec.df[elec.df$GDP>6000, ]
 ```
 
-WRITE COMMENT HERE
 
+China and UnitedStates are the two countries whose GDP are greater than 6000. We need to eliminate these two points.
 
 # Replot data eliminating countries with GDP greater than 6000. 
 ```{r,fig.height=4,fig.width=6}
 # Hint: If you want to limit the range of the data, do so in the data statement. E.G. something similar to data=elec.df[elec.df$GDP>2000,]
-
-
+elecdata.df = elec.df[elec.df$GDP<6000, ]
+plot(Electricity~GDP, data=elecdata.df)
 ```
 
-WRITE COMMENT HERE
-
+After eliminating the two countries, all the countries' GDP are less than 6000 and the data are linearly distributed from observing the figure.
 
 
 # Fit a more appropriate linear model, including model checks.
 ```{r,fig.height=4,fig.width=6}
-
-
-
-
+elecfit2=lm(Electricity~GDP,data=elecdata.df)
+plot(elecfit2,which=1)
+normcheck(elecfit2)
+cooks20x(elecfit2)
 ```
 
 
 # Create a scatter plot with the fitted line from your model superimposed over it. 
 ```{r,fig.height=4,fig.width=6}
-
-
-
-
+trendscatter(Electricity~GDP, data=elecdata.df)
+abline(coef(elecfit2), col = "green")
 ```
 
 
@@ -93,25 +89,24 @@ Our model explains 93% of the total variation in the response variable, and so w
 
 # Executive Summary
 
-WRITE EXEC SUMMARY HERE
-
-
+```{r}
+summary(elecfit2)
+confint(elecfit2)
+```
+Abort this analysis, we wish to investigate the relationship between electricity consumption and the gross domestic product (GDP) for countries of the world, and in order to the accuracy of the model, we eliminated two countries that have a great impact on the model. We actually have the evidence that a relationships exists, it likes a linear relationship. Because of p-value is too small, such that 1.561e-15, so we have strongly evidence to explain that there does exist a linear relationship. And the $\beta_1$ represent the GDP, and we find that the estimated mean value of $\beta_1$ is equal to 0.18917 which is between 0.1676863 and 0.2106611. So we have 95% of the confidence intervals (0.1676863, 0.2106611) will contain the true value. In addition, we can obtain the Multiple R-squared is equal to 0.9322, which is very close to 1. In conclusion, our model explains 93% of the total variation in the response variable, and so will be reasonable for prediction. Between electricity consumption and the gross domestic product (GDP) has a strong linear relationship.
 
 
 
 
 # Predict the electricity usage for a country with GDP 1000 billion dollars. 
 ```{r}
-
-
-
-
+preds.df = data.frame(GDP = c(1000))
+predict(elecfit2, preds.df, interval = "prediction")
 ```
 
 # Interpret the prediction and comment on how useful it is.
 
-WRITE COMMENTS HERE
-
+We calculated fitted values for GDP which got 1000 billion. And then we get the fixed value is that 191.2253. We actually know the range of the electricity usage when its GDP reaches 1000 billion. Though the width of the forecast may be a little big, it is still useful to predict the electricity usage through the value of GDP.
 
 
 ****
@@ -129,8 +124,8 @@ hist(Life.df$Life)
 summary(Life.df$Life)
 ```
 
-WRITE COMMENT HERE
 
+Through the summary of the data we had, we obtain the mean of the life is 69.79. It is much closer to the expected number,68. And from observing the histogram, the peak is in the range of about 70.
 
 ## Manually calculate the t-statistic and the corresponding 95\% confidence interval. 
 Formula: $T = \frac{\bar{y}-\mu_0}{se(\bar{y})}$ and 95\% confidence interval $\bar{y} \pm t_{df,0.975} \times se(\bar{y})$
@@ -139,14 +134,22 @@ NOTES: The R code ```mean(y)``` calculates $\bar{y}$, ```sd(y)``` calculates $s$
 
 
 ```{r}
-
-
-
-
-
-
+# Calculate the t-statistic
+n = nrow(Life.df)
+df = n - 1
+mean_life_pre = mean(Life.df$Life)
+mean_life_hyp = 68
+se_life = sd(Life.df$Life) / sqrt(n)
+t = (mean_life_pre - mean_life_hyp) / se_life
+paste("t = ", t)
 ```
-
+```{r}
+#Calculate the CI
+t_df_0.975 = qt(0.975, df)
+df = n - 1
+CI = mean_life_pre + c(-1, 1) *  t_df_0.975 * se_life
+paste(CI, collapse = ",")
+```
 ##  Using the t.test function
 ```{r}
 t.test(Life.df$Life, mu=68)
@@ -161,31 +164,35 @@ You should get exactly the same results from the manual calculations and using t
 lifefit1=lm(Life~1,data=Life.df)
 normcheck(lifefit1)
 cooks20x(lifefit1)
-summary(lifefit1);
+summary(lifefit1)
 confint(lifefit1)
 ```
 
 # Why are the P-values from the t-test output and null linear model different?
 
-WRITE COMMENT HERE
 
+First, I think t-test and null linear fitting are two different concepts.
 
+In the t-test, the null hypothesis is that the value of the true mean is equal to 68. And the alternative hypothesis is that the value of the true mean is not equal to 68. So the p-value means that if the mean value is equal to 68, the possibility of the data we get is the same or or even more extreme as we assumed.
+
+In the null linear fitting model, the null hypothesis is that the value of the true mean is equal to 0. And the alternative hypothesis is that the value of the true mean is not equal to 0. So the p-value means that if the mean value is equal to 0, the possibility of the data we get is the same or or even more extreme as we assumed.
+Of course, the null linear model's p-value is much smaller than t-test's
 
 
 # Method and Assumption Checks
 
 As the data consists of one measurement - the life expectancy for each country - we have applied a one sample t-test to it, equivalent to an intercept only linear model (null model).
 
-We have a random sample of 55 countries so we can assume they form an independant and representative sample. We wished to estimate their average life expectancy and compare it to 68 years. Checking the normality of the differences reveals the data is moderately left skewed. However, we have a large sample size of 55 and can appeal to the Central Limit Theorem for the distribution of the sample mean, so are not concerned. There were no unduly influential points.
+We have a random sample of 55 countries so we can assume they form an independent and representative sample. We wished to estimate their average life expectancy and compare it to 68 years. Checking the normality of the differences reveals the data is moderately left skewed. However, we have a large sample size of 55 and can appeal to the Central Limit Theorem for the distribution of the sample mean, so are not concerned. There were no unduly influential points.
 
 Our model is:
 $Life_i = \mu_{Life} + \epsilon_i$ where $\epsilon_i \sim iid ~ N(0,\sigma^2)$ 
 
+
 # Executive Summary 
 
 
-WRITE EXEC SUMMARY HERE
-
+To begin with, we want to estimate whether the mean value of the life in the world is equal to 68. First, we plot the histogram of the data and have a summary. The result is that the observing mean value is equal to 69.79. Then, we have a t-test. We find that the p-value is equal to 0.1577 which is too big, so we cannot refuse the null hypothesis that the mean value of is 68. In other words, the null hypothesis is valid. And we have 95% of the confidence intervals (67.28629, 72.28775) will contain the true value. It's more useful to predict the more closer mean value of life. And we don't have a R-square because we have a single-variable prediction.
 
 ****
 
@@ -194,8 +201,7 @@ WRITE EXEC SUMMARY HERE
 
 # Question of interest/goal of the study
 
-WRITE COMMENT HERE
-
+The question of the goal of the analysis is that figuring out the relationship between the price and age.
 
 ## Read in and inspect the data:
 ```{r,fig.height=3.5,fig.width=6}
@@ -205,44 +211,45 @@ trendscatter(Price~Age,data=home.df)
 ```
 
 
-WRITE COMMENT HERE
+We plot the data and the trend scatter. We find that the price and age do not have a linear relationship. It’s like quadratic. So we try to fit it with a quadratic regression model.
 
 ## Fit an appropriate linear model, including model checks.
 
 ```{r,fig.height=3.5,fig.width=6}
-
-
-
-
+home.fit = lm(Price~Age+I(Age^2), data = home.df)
+plot(home.fit, which = 1)
+normcheck(home.fit)
+cooks20x(home.fit)
 ```
 
 ## Plot the data with your appropriate model superimposed over it.
 ```{r,fig.height=3.5,fig.width=6}
-
-
-
+plot(Price~Age,data=home.df)
+x = 0:100
+lines(x, predict(home.fit, data.frame(Age = x)), col="red")
+trendscatter(Price~Age, data = home.df)
 ```
 
 
 # Method and Assumption Checks
 
-WRITE M & A CHECKS HERE
+```{r}
+nrow(home.df)
+summary(home.fit)
+confint(home.fit)
+```
+Since we have a quadratic model to fit the data, because the data we observed is not a linear model, and it has a curve, so we choose the quadratic model. We have 76 of the random single-family homes, and because of random, we could not doubt about the independence. These are likely to be minor, with a bigger concern being how representative the data is of a wider group of single-family homes. First, we plot the data and find it more suitable for quadratic model. Then, we plot the residual diagram for the EOV. The residuals show patternless scatter with fairly constant variability - so no problems. After this, the normaility checks don't show any major problems and the Cook's plot doesn't reveal any further unduly influential points. Overall, all the model assumptions are satisfied.
 
+Our model is:
+$Price_i =\beta_0 +\beta_1\times Age_i + \beta_2\times Age_i^2 + \epsilon_i$ where $\epsilon_i \sim iid ~ N(0,\sigma^2)$ 
+
+Our model explains 14.68% of the total variation in the response variable, and so will be reasonable for prediction.
 
 
 # Executive Summary
 
 
-WRITE EXEC SUMMARY HERE
-
-
-
-
-
-
-
-
-
+We want to know how the sale price of a house is influenced by the age of the house. Then we fit the quadratic model to the data we obtain. We have evidence to explain that there does exist a quadratic relationship, because the p-value is equal to 0.001773. And the $\beta_2$ represent the the square of age, and we find that the estimated mean value of $\beta_2$ is equal to 0.02749 which is between 0.01060739 and 0.04437476. So we have 95% of the confidence intervals (0.01060739, 0.04437476) will contain the true value. In addition, we can obtain the Multiple R-squared is equal to 0.1468. In conclusion, our model explains 14.68% of the total variation in the response variable, and so will be reasonable for prediction. Between price and age has a quadraic relationship.
 
 
 

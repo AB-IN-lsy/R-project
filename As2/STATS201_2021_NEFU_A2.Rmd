@@ -1,0 +1,266 @@
+---
+title: "STATS 201 Assignment 2"
+author: 'Your name and ID number here'
+date: 'Due Date: ----'
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.height=3)
+```
+```{r echo=FALSE}
+## Do not delete this!
+## It loads the s20x library for you. If you delete it 
+## your document may not compile
+require(s20x)
+```
+
+# Question 1
+
+## Question of interest/goal of the study
+
+We want to build a model to explain the sale price of houses using their annual city tax bill (similar idea to rates in New Zealand) for houses in Albuquerque, New Mexico. In particular, we are interested in estimating the effect on sales price for houses which differ in city tax bills by 1% and 50%. 
+
+# Read in and inspect the data:
+```{r,fig.height=4,fig.width=6}
+hometax.df=read.csv("hometax.csv")
+
+trendscatter(Price~Tax,main="Price vs Tax",data=hometax.df)
+trendscatter(log(Price)~log(Tax),main="log(Price) vs log(Tax)",data=hometax.df)
+
+```
+
+
+
+
+
+
+
+## Justify why a log-log (power) model is appropriate here.
+
+
+
+
+
+
+## Fit model and check assumptions.
+```{r,fig.height=3.5,fig.width=6}
+
+
+
+
+
+
+
+
+```
+
+
+
+## Methods and assumption checks
+
+
+
+
+
+
+
+## Executive Summary
+
+
+
+
+
+****
+
+# Question 2
+
+
+## Question of interest/goal of the study
+
+We want to explore the relationship between hippocampus size and age. In particular, we are interested in whether the relationship differs between healthy individuals and individuals with dementia related symptoms. 
+
+# Read in and inspect the data:
+```{r,fig.height=4,fig.width=6}
+Hippocampus.df<-read.csv("Hippocampus.csv")
+plot(Hippocampus~Age,main="Hippocampus Size versus Age",type="n",data=Hippocampus.df)
+text(Hippocampus.df$Age, Hippocampus.df$Hippocampus, Hippocampus.df$AD, cex=.8)
+
+trendscatter(Hippocampus~Age,data=Hippocampus.df[Hippocampus.df$AD=="D",],xlim=c(55,95),main="Dementia")
+trendscatter(Hippocampus~Age,data=Hippocampus.df[Hippocampus.df$AD=="H",],xlim=c(55,95),main="Healthy")
+```
+
+
+
+
+
+
+
+## Fit model and check assumptions.
+```{r,fig.height=3.5,fig.width=6}
+
+
+
+
+
+```
+
+## Plot the data with your appropriate model superimposed over it
+```{r,fig.height=4,fig.width=6}
+plot(Hippocampus~Age,main="Hippocampus Size versus Age",sub="red = Healthy, green = Dementia",type="n",data=Hippocampus.df)
+text(Hippocampus.df$Age, Hippocampus.df$Hippocampus, Hippocampus.df$AD, cex=.8)
+
+
+
+
+
+```
+
+
+## Methods and assumption checks
+
+
+
+
+
+
+
+
+
+## Executive Summary
+
+
+
+
+
+
+
+****
+
+# Question 3
+
+## Question of interest/goal of the study
+
+It is of interest to study the relationship between ventricles and age. In particular, we are interested in whether the relationship varies between healthy individuals and individuals with dementia related symptoms.  
+
+
+## Read in and inspect the data:
+```{r,fig.height=4,fig.width=6}
+Ventricles.df=read.csv("Ventricles.csv")
+plot(Ventricles~Age,main="Ventricles Size versus Age",type="n",data=Ventricles.df)
+text(Ventricles.df$Age, Ventricles.df$Ventricles, Ventricles.df$AD, cex=.8)
+
+plot(log(Ventricles)~Age,main="log Ventricles Size versus Age",type="n",data=Ventricles.df)
+text(Ventricles.df$Age, log(Ventricles.df$Ventricles), Ventricles.df$AD, cex=.8)
+
+trendscatter(log(Ventricles)~Age,data=Ventricles.df[Ventricles.df$AD=="D",],xlim=c(55,95),main="Dementia")
+trendscatter(log(Ventricles)~Age,data=Ventricles.df[Ventricles.df$AD=="H",],xlim=c(55,95),main="Healthy")
+
+```
+
+
+
+
+
+
+
+
+
+
+```{r,fig.height=4,fig.width=6}
+Ventriclesfit1=lm(log(Ventricles)~Age*AD,data=Ventricles.df)
+plot(Ventriclesfit1,which=1)
+normcheck(Ventriclesfit1)
+cooks20x(Ventriclesfit1)
+summary(Ventriclesfit1)
+confint(Ventriclesfit1)
+exp(confint(Ventriclesfit1))
+(exp(confint(Ventriclesfit1))-1)*100
+
+# rotate factor 
+Ventricles.df=within(Ventricles.df,{ADflip=factor(AD,levels=c("H","D"))})
+Ventriclesfit2=lm(log(Ventricles)~Age*ADflip,data=Ventricles.df)
+summary(Ventriclesfit2)
+confint(Ventriclesfit2)
+exp(confint(Ventriclesfit2))
+(exp(confint(Ventriclesfit2))-1)*100
+
+```
+
+
+## Plot the data with your appropriate model superimposed over it
+```{r,fig.height=4,fig.width=6}
+plot(log(Ventricles)~Age,main="log Ventricles Size versus Age",sub="red = Healthy, green = Dementia",type="n",data=Ventricles.df)
+text(Ventricles.df$Age, log(Ventricles.df$Ventricles), Ventricles.df$AD, cex=.8)
+abline(Ventriclesfit1$coef[1],Ventriclesfit1$coef[2],col="green")
+abline(Ventriclesfit1$coef[1]+Ventriclesfit1$coef[3],
+       Ventriclesfit1$coef[2]+Ventriclesfit1$coef[4],col="red")
+
+# or abline(Ventriclesfit2$coef[1],Ventriclesfit2$coef[2],col="red")
+```
+
+
+## Methods and assumption checks
+
+As the size of the ventricles increased the variabilty also increased so we logged the Ventricles data, this evened out the scatter. We have two explanatory variables, a  grouping explanatory variable with two levels and a numeric explanatory variable, so have fitted a linear model with both variables and included an interaction term. The test for the interaction term proved to be significant, so the interaction term was kept and the model could not be simplified further.
+
+Checking the assumptions there are no problems with assuming constant variability; looking at normality we see no issues and the Cook's plot doesn't reaveal any points of concern; as we have assumed the people were randomly sampled, independence is satisfied. The model assumptions are satisfied.
+
+
+Our model is:
+$log(Ventricles_i) = \beta_0  + \beta_1 \times Age_i + \beta_2 \times ADH_i + \beta_3 \times Age_i \times ADH_i + \epsilon_{i}$ 
+where $ADH_i = 1$ if the $i$th subject is healthy and 0 if they have signs of dementia, and $\epsilon_i \sim iid ~N(0,\sigma^2)$
+
+Our model only explained 19% of the variability in the data.
+
+## In terms of slopes and/or intercepts, explain what the coefficient of Age:ADH is estimating.
+
+
+
+
+
+
+##	  For each of the following, either write a sentence interpreting a confidence interval to estimate the requested information or state why we cannot answer this from the R-output given:
+
+###	-in general, the difference in size of ventricles between healthy people and those exhibiting dementia symptoms.
+
+
+
+
+
+
+###	-the effect on  the size of ventricles for each additional years aging on healthy people.
+
+
+
+
+
+### -the effect on  the size of ventricles for each additional years aging on people exhibiting dementia symptoms.
+
+
+
+
+
+## Looking at the plot with the model superimposed, describe what seems to be happening.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

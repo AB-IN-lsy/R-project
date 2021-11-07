@@ -93,9 +93,7 @@ We fit a positive power law linear model to sample.
 
 And we know that the p-value is less than 2e-16, which means we have extremely evidence that suggest the power law linear relationship between price and tax exists.
 
-We have 95% of the confidence that increasing tax by 1% corresponds to an increase in median price between 0.73% and 0.86%. 
-
-We have 95% of the confidence that increasing tax by 50% corresponds to an increase in median price between 34.91% and 42.16%.
+We have 95% of the confidence that increasing tax by 1% corresponds to an increase in median price between 0.73% and 0.86%. We have 95% of the confidence that increasing tax by 50% corresponds to an increase in median price between 34.91% and 42.16%.
 
 We can obtain the Multiple R-squared is equal to 0.8564.
 
@@ -187,7 +185,7 @@ confint(Hippocampus.fit3)
 
 Observing the summary of deleting both AgeD and D coefficient, the Multiple R-squared is smaller than the previous, so it is not used.
 
-Lastly, relatively speaking, **the fitting degree of the model with D equal to 0 is better**, so next we choose this model for fitting and summary.
+Lastly, relatively speaking, the fitting degree of the model with D equal to 0 is better, so next we choose this model for fitting and summary.
 
 
 ## Plot the data with your appropriate model superimposed over it
@@ -205,31 +203,9 @@ abline(b1[1], b1[2] + b1[3], lty = 2, col = "green") #Dementia
 
 We have a random sample of 1489 individuals who is Health or Dementia, so we can assume they form an independent and representative sample.
 
-The scatter plot of the Hippocampus vs Age showed clear linearity and an decrease in variability with age. Hippocampus size are both influenced by numeric variable Age and the factor variable Healthy or Dementia. And we in order to find the best fit to the sample, we fitted four models, of which we selected a linear model with explanatory variables x1(Age), x2(AD * Age) (interaction) to our data.
-
-Then, we plot the residual diagram for the EOV. The residuals show patternless scatter with fairly constant variability - so no problems. After this, the normaility checks don't show any major problems and the Cook's plot doesn't reveal any further unduly influential points. Overall, all the model assumptions are satisfied.
-
-Our model is 
-$$Hippocampus_i =\beta_0 +\beta_1\times Age_i +\beta_2 \times D_i \times Age_i +\epsilon_i$$ where $\epsilon_i \sim iid ~ N(0,\sigma^2)$
-The D is 1 when the individual is Dementia, and D is 0 when the individual is Healthy.
-
-Our model explains 23.27% of the total variation in the response variable, and so it is not very good for prediction.
+The scatter plot of the Hippocampus vs Age showed clear linearity and an decrease in variability with age. Hippocampus size are both influenced by numeric variable Age and the factor variable Healthy or Dementia. And we in order to find the best fit to the sample, we fitted four models, of which we selected a linear model with explanatory variables x1(Age), x2(AD 
 
 
-## Executive Summary
-In this question, we are interested in studying the relationship between Hippocampus size and age. In particular, we are interested in whether the relationship differs between healthy individuals and individuals with dementia related symptoms.
-
-We fit a linear regression model (decreasing) both Healthy and Dementia to our sample with explanatory variables x1(Age), x2(AD * Age)(interaction).
-
-And we know that the p-value is less than 2e-16, which means we have extremely evidence that suggest the linear relationship between Hippocampus size and Age exists.
-
-We have 95% of the confidence that when each age increasing, the excepted value of Hippocampus size decrease are between 48.8 and 63.7 MRI and the estimated mean of their in Hippocampus size are between 11007 and 12106 MRI in Healthy individuals. 
-
-We have 95% of the confidence that when each age increasing, the excepted value of Hippocampus size decrease are between (48.8 + 9.87) and (63.7 + 13.1) MRI, that is (56.7, 76.8) in Dementia individuals.
-
-We can obtain the Multiple R-squared is equal to 0.2327.
-
-In conclusion, our model explains 23.27% of the total variation in the response variable, and so it is not very good for prediction.
 
 
 
@@ -313,8 +289,6 @@ Our model only explained 19% of the variability in the data.
 
 ## Pretreatment
 
-According to the model we fitted, we can disassemble the formula into two cases.
-
 When $ADH_i = 0$, $$Ventricles_i = e^{\beta_0  + \beta_1 \times Age_i + \epsilon_{i}}\times [ADH_i == 0]$$
 
 When $ADH_i = 1$, $$Ventricles_i = e^{\beta_0 + \beta_2 + (\beta_1 + \beta_3) \times Age_i  + \epsilon_{i}} \times [ADH_i == 1]$$
@@ -330,26 +304,26 @@ Age:ADH is a interaction variable. It means that the healthy individuals compare
 
 ###	-in general, the difference in size of ventricles between healthy people and those exhibiting dementia symptoms.
 
-We can deduce the formula, we assume that $Age^*=Age+1$, and we can deduce the variation of $\hat{Ventricles} ^ *$.
+We can deduce the formula, we assume that $Age^*=Age+1$, and We can deduce the variation of $\hat{Ventricles} ^ *$.
 
 when $ADH_i = 0$, corresponding Dementia
 $$
 \begin{aligned}
-\hat{Ventricles_1} ^ * &= e^{\hat{\beta_0}  + \hat{\beta_1} \times Age^*}
+\hat{Ventricles_2} ^ * &= e^{\hat{\beta_0}  + \hat{\beta_1} \times Age^*}
 \\ &= e^{\hat{\beta_0}  + \hat{\beta_1} \times Age + \hat{\beta_1}} 
-\\ &= \hat{Ventricles_1} \times e^{\hat{\beta_1}}
+\\ &= \hat{Ventricles_2} \times e^{\hat{\beta_1}}
 \end{aligned} 
 $$
 
 So when $ADH_i = 1$, corresponding Healthy
 $$
 \begin{aligned}
-\hat{Ventricles_2} ^ * &= e^{\hat{\beta_0} + \hat{\beta_2} + (\hat{\beta_1} + \hat{\beta_3}) \times Age^*  } 
+\hat{Ventricles_1} ^ * &= e^{\hat{\beta_0} + \hat{\beta_2} + (\hat{\beta_1} + \hat{\beta_3}) \times Age^*  } 
 \\ &= e^{\hat{\beta_0} + \hat{\beta_2} + (\hat{\beta_1} + \hat{\beta_3}) \times Age  + (\hat{\beta_1} + \hat{\beta_3})} 
-\\ &= \hat{Ventricles_2} \times e^{(\hat{\beta_1} + \hat{\beta_3})}
+\\ &= \hat{Ventricles_1} \times e^{(\hat{\beta_1} + \hat{\beta_3})}
 \end{aligned} 
 $$
-So we can from the two formulas conclude that the difference in size of ventricles between healthy people and those exhibiting dementia symptoms is about when the age increase one, the median expected ventricular size of healthy individuals is $(1 + e^{\beta_3})\%$  of dementia.
+So we can from the two formulas conclude that the difference in size of ventricles between healthy people and those exhibiting dementia symptoms is about when the age increase one, The median expected ventricular size of healthy individuals is $(1 + e^{\beta_3})\%$  of dementia.
 
 And we can get this answer from `(exp(confint(Ventriclesfit1))-1)*100`. We can find that the Healthy individuals’ expected median of the size of Ventricles could decrease by 0.49% to 2.10% than Dementia individuals'.
 

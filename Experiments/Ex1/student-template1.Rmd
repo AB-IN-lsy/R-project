@@ -1,0 +1,33 @@
+---
+title: "STATS 201 Lab Class 1"
+author: Student name, Student ID Number
+output:
+  word_document: default
+  pdf_document: default
+---
+\large
+
+#Gravity experiment
+
+# Code and output
+
+```{r}
+library(s20x)
+## Loading in the data.
+## Loading in the data.
+Gravity.df = read.table("GravityExpt.txt", header = TRUE)
+## Plot the data.
+## INSERT CODE HERE.
+## Analyse the data.
+## INSERT CODE HERE.
+## Answer research questions.
+## INSERT CODE HERE.
+```
+
+# Methods and Assumption Checks
+
+[WRITE METHODS AND ASSUMPTION CHECKS HERE]
+
+# Executive Summary
+
+[WRITE EXECUTIVE SUMMARY HERE]

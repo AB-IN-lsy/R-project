@@ -1,0 +1,29 @@
+---
+title: "STATS 201 Lab Class 3"
+author: Student name, Student ID Number
+output:
+  word_document: default
+  pdf_document: default
+---
+\large
+
+# Pizza size
+
+# Code and output
+
+```{r}
+## Loading in the data.
+pizza.df = read.table(file = "pizza.txt", header = TRUE)
+## Plot the data.
+## INSERT CODE HERE.
+## Analyse the data.
+## INSERT CODE HERE.
+```
+
+# Methods and Assumption Checks
+
+[WRITE METHODS AND ASSUMPTION CHECKS HERE]
+
+# Executive Summary
+
+[WRITE EXECUTIVE SUMMARY HERE]

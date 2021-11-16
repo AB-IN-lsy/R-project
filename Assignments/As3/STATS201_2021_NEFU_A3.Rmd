@@ -1,0 +1,104 @@
+---
+title: "STATS 201 Assignment 3"
+author: 'Your Name and ID number here'
+date: 'Due Date: ----'
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+---
+
+```{r echo=FALSE,warning=FALSE}
+## Do not delete this!
+## It loads the s20x library for you. If you delete it 
+## your document may not compile
+require(s20x)
+```
+
+# Question 1 
+
+## Question of interest/goal of the study
+
+We wish to identify the most promising trombone practice method. Do any of the methods show significant improvement? If so, which method shows the most significant improvement and by how much?
+
+## Read in and inspect the data:
+
+```{r,fig.height=4.2,fig.width=6}
+trombone.df <- read.csv("trombone.csv")
+trombone.df$method <- factor(trombone.df$method,levels=c("NP","MP","MPS","PP","CP"))
+stripchart(diff~method,data=trombone.df,vertical=T,pch=16,cex=1.5,method="stack",ylab="Difference in scores",main="Score change vs Training method")
+summaryStats(diff~method,data=trombone.df)
+
+```
+
+## Comment on plot(s) and/or summary statistics:
+
+
+
+ 
+## Fit model and check assumptions
+
+```{r}
+
+
+
+```
+
+
+
+## Methods and assumption checks
+
+
+
+## Executive Summary
+
+
+
+
+
+
+
+
+****
+
+# Question 2
+
+
+## Question of interest/goal of the study
+
+
+
+## Read in and inspect the data:
+
+```{r,fig.height=5,fig.width=8}
+height.df=read.table("height.txt",header=T)
+
+
+
+
+```
+
+## Comment on plot(s) and/or summary statistics:
+
+
+
+
+## Fit model and check assumptions
+
+```{r}
+
+
+```
+
+## Methods and assumption checks
+
+
+
+
+## Executive Summary
+
+
+
+

@@ -1,9 +1,9 @@
 ---
 title: "STATS 201 Lab Class 1"
-author: Student name, Student ID Number
+author: Liu Siyuan, 2019210173
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 ---
 \large
 
@@ -13,21 +13,76 @@ output:
 
 ```{r}
 library(s20x)
-## Loading in the data.
-## Loading in the data.
+## Loading in and inspect the data.
 Gravity.df = read.table("GravityExpt.txt", header = TRUE)
-## Plot the data.
-## INSERT CODE HERE.
-## Analyse the data.
-## INSERT CODE HERE.
-## Answer research questions.
-## INSERT CODE HERE.
+plot(Height ~ Time, data = Gravity.df)
+trendscatter(Height ~ Time, data = Gravity.df)
+```
+
+# Comment
+We plot the data and the trend scatter. We find that the Height and Time do not have a linear relationship. It’s like quadratic. So we try to fit it with a quadratic regression model.
+
+# Fit an appropriate quadratic model, including model checks.
+```{r,fig.height=3.5,fig.width=6}
+Gravity.fit = lm(Height ~ Time + I(Time ^ 2), data = Gravity.df)
+plot(Gravity.fit, which = 1)
+normcheck(Gravity.fit)
+cooks20x(Gravity.fit)
+```
+
+## Plot the data with quadratic model superimposed over it.
+```{r,fig.height=3.5,fig.width=6}
+plot(Height ~ Time, data = Gravity.df)
+x = seq(0, 2.0, 0.2)
+lines(x, predict(Gravity.fit, data.frame(Time = x)), col="red")
+trendscatter(Height ~ Time, data = Gravity.df)
+```
+# Summay and Confint
+```{r}
+summary(Gravity.fit)
+confint(Gravity.fit)
+
+```
+## Refit the Model without the Intercept
+
+```{r}
+Gravity1.fit = lm(Height ~ 0 + Time + I(Time ^ 2), data = Gravity.df)
+plot(Gravity1.fit, which = 1)
+normcheck(Gravity1.fit)
+cooks20x(Gravity1.fit)
+
+plot(Height ~ Time, data = Gravity.df)
+x = seq(0, 2.0, 0.2)
+lines(x, predict(Gravity1.fit, data.frame(Time = x)), col="red")
+trendscatter(Height ~ Time, data = Gravity.df)
+
+summary(Gravity1.fit)
+confint(Gravity1.fit)
 ```
 
 # Methods and Assumption Checks
 
-[WRITE METHODS AND ASSUMPTION CHECKS HERE]
+We fitted	a	linear model with	quadratic term as	exploratory	plots	revealed	some curvature. After	fitting	the	quadratic, the residuals were	fine, there	were no	problems with	normality	and	no unduly	influential	points.	We	have independence	from taking	a	random sample.
+
+Our model is:
+$$Height_i =\beta_0 +\beta_1\times Time_i + \beta_2\times Time_i^2 + \epsilon_i$$ where $\epsilon_i \sim iid ~ N(0,\sigma^2)$ 
+Our model explains $99\%$ of the total variation in the response variable, so it will be reasonable for prediction.
 
 # Executive Summary
 
-[WRITE EXECUTIVE SUMMARY HERE]
+We are interested in addressing a few questions of interest in the Executive Summary.
+
+First, we can find the estimated value of $g$ in the summary, which is equal to $-4.874 ms^{-2}/ 0.5 = -9.75ms^{-2}$
+
+Second, we have $95\%$ confidence that the $-0.5g$ is in the interval between $-5.01$ and $-4.73$. Such that we have 95% confidence that the $g$ is in the interval between $9.46$ and $10.02$. We find that the confidence interval contains a theoretical value of $9.8$. So we can say that our estimated value of $g$ consistent with the theoretical value of $9.80$.
+
+Thirdly, we can conclude from the summary that the true value of the intercept term coefficient is $0$, because its p-value is very close to $1$, so we have to accept the null hypothesis, that is, the intercept is $0$. This is consistent with our analysis.
+
+Lastly, we can find that we have $95\%$ confidence that the $-0.5g$ is in the interval between $-4.96$ and $-4.79$. Such that we have 95% confidence that the $g$ is in the interval between $9.59$ and $9.91$. Compared to the $CI$  for $g$ with the $CI$ we calculated earlier, the interval is narrowed and the estimate will be more accurate.
+
+In conclusion, our model explains $99\%$ of the total variation in the response variable, and so will be reasonable for prediction.
+
+
+
+
+
